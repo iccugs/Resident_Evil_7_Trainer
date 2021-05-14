@@ -75,6 +75,79 @@ re7.exe+B1EE44: 73 09              - jae re7.exe+B1EE4F
 </AssemblerScript>
     </CheatEntry>
     <CheatEntry>
+      <ID>17</ID>
+      <Description>"Infinite O2"</Description>
+      <LastState/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>{ Game   : re7.exe
+  Version: 
+  Date   : 2021-05-14
+  Author : john
+
+  This script does blah blah blah
+}
+
+[ENABLE]
+
+aobscanmodule(infO2,re7.exe,00 F3 0F 11 12 C3) // should be unique
+alloc(newmem,$1000,infO2)
+
+label(code)
+label(return)
+
+newmem:
+
+code:
+  nop
+  nop
+  nop
+  nop
+  ret 
+  jmp return
+
+infO2+01:
+  jmp newmem
+return:
+registersymbol(infO2)
+
+[DISABLE]
+
+infO2+01:
+  db F3 0F 11 12 C3
+
+unregistersymbol(infO2)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: re7.exe+21B528D
+
+re7.exe+21B526B: 48 83 79 40 00  - cmp qword ptr [rcx+40],00
+re7.exe+21B5270: 74 1B           - je re7.exe+21B528D
+re7.exe+21B5272: F3 0F 10 02     - movss xmm0,[rdx]
+re7.exe+21B5276: 0F 2E C2        - ucomiss xmm0,xmm2
+re7.exe+21B5279: 7A 02           - jp re7.exe+21B527D
+re7.exe+21B527B: 74 14           - je re7.exe+21B5291
+re7.exe+21B527D: F3 0F 11 12     - movss [rdx],xmm2
+re7.exe+21B5281: 48 8B D1        - mov rdx,rcx
+re7.exe+21B5284: 48 8B 49 40     - mov rcx,[rcx+40]
+re7.exe+21B5288: E9 93 28 00 00  - jmp re7.exe+21B7B20
+// ---------- INJECTING HERE ----------
+re7.exe+21B528D: F3 0F 11 12     - movss [rdx],xmm2
+// ---------- DONE INJECTING  ----------
+re7.exe+21B5291: C3              - ret 
+re7.exe+21B5292: CC              - int 3 
+re7.exe+21B5293: CC              - int 3 
+re7.exe+21B5294: CC              - int 3 
+re7.exe+21B5295: CC              - int 3 
+re7.exe+21B5296: CC              - int 3 
+re7.exe+21B5297: CC              - int 3 
+re7.exe+21B5298: CC              - int 3 
+re7.exe+21B5299: CC              - int 3 
+re7.exe+21B529A: CC              - int 3 
+}
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
       <ID>1</ID>
       <Description>"Infinite Ammo"</Description>
       <LastState/>
@@ -225,7 +298,7 @@ re7.exe+1687519: 48 85 C0                 - test rax,rax
     <CheatEntry>
       <ID>14</ID>
       <Description>"health1"</Description>
-      <LastState Value="3000" RealAddress="29139CF3304"/>
+      <LastState Value="2064.0625" RealAddress="29139CF3304"/>
       <VariableType>Float</VariableType>
       <Address>29139CF3304</Address>
     </CheatEntry>
@@ -280,7 +353,7 @@ re7.exe+1687519: 48 85 C0                 - test rax,rax
         <Byte>FE</Byte>
       </After>
     </CodeEntry>
-    <CodeEntry Color="80000008">
+    <CodeEntry Color="20000000">
       <Description>Change of movss [rdi+54],xmm1</Description>
       <AddressString>re7.exe+56C3D7</AddressString>
       <Before>
@@ -305,7 +378,7 @@ re7.exe+1687519: 48 85 C0                 - test rax,rax
         <Byte>48</Byte>
       </After>
     </CodeEntry>
-    <CodeEntry Color="80000008">
+    <CodeEntry Color="20000000">
       <Description>Change of movss xmm0,[rdx+rax]</Description>
       <AddressString>re7.exe+21F3CB6</AddressString>
       <Before>
@@ -330,7 +403,7 @@ re7.exe+1687519: 48 85 C0                 - test rax,rax
         <Byte>40</Byte>
       </After>
     </CodeEntry>
-    <CodeEntry Color="80000008">
+    <CodeEntry Color="20000000">
       <Description>Change of movss [rdx+24],xmm2</Description>
       <AddressString>re7.exe+B1EE1F</AddressString>
       <Before>
@@ -353,6 +426,30 @@ re7.exe+1687519: 48 85 C0                 - test rax,rax
         <Byte>2F</Byte>
         <Byte>C1</Byte>
         <Byte>72</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry Color="80000008">
+      <Description>Change of movss [rdx],xmm2</Description>
+      <AddressString>re7.exe+21B528D</AddressString>
+      <Before>
+        <Byte>E9</Byte>
+        <Byte>93</Byte>
+        <Byte>28</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Before>
+      <Actual>
+        <Byte>F3</Byte>
+        <Byte>0F</Byte>
+        <Byte>11</Byte>
+        <Byte>12</Byte>
+      </Actual>
+      <After>
+        <Byte>C3</Byte>
+        <Byte>CC</Byte>
+        <Byte>CC</Byte>
+        <Byte>CC</Byte>
+        <Byte>CC</Byte>
       </After>
     </CodeEntry>
   </CheatCodes>

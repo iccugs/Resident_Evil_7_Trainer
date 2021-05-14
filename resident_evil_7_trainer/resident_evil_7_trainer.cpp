@@ -5,12 +5,13 @@
 #include "proc.h"
 #include "mem.h"
 #include "ascii.h"
-bool bHealth = false, bAmmo = false, bGrenades = false;
+bool bHealth = false, bO2= false, bAmmo = false, bGrenades = false;
 void Menu()
 {
 	std::cout << "HOTKEY = FUNCTIONS = STATUS\n";
 	std::cout << "===========================\n";
-	std::cout << "NUM1 = INFINITE HEALTH = " << bHealth << "\n";
+	std::cout << "NUM0 = INFINITE HEALTH = " << bHealth << "\n";
+	std::cout << "NUM1 = INFINITE O2 = " << bO2 << "\n";
 	std::cout << "NUM2 = INFINITE AMMO = " << bAmmo << "\n";
 	std::cout << "NUM3 = INFINITE GRENADES = " << bGrenades << "\n\n";
 	std::cout << "INSERT = EXIT TRAINER\n";
@@ -40,7 +41,7 @@ int main()
 	DWORD dwExit = 0;
 	while (GetExitCodeProcess(hProcess, &dwExit) && dwExit == STILL_ACTIVE)
 	{
-		if (GetAsyncKeyState(VK_NUMPAD1) & 1)
+		if (GetAsyncKeyState(VK_NUMPAD0) & 1)
 		{
 			bHealth = !bHealth;
 			if (bHealth)
@@ -54,6 +55,20 @@ int main()
 				mem::PatchEx((BYTE*)(moduleBase + 0xB1EE1F), (BYTE*)"\xF3\x0F\x11\x52\x24", 5, hProcess);
 				ClearScreen();
 				Menu();
+			}
+		}
+		if (GetAsyncKeyState(VK_NUMPAD1) & 1)
+		{
+			bO2 = !bO2;
+			if (bO2)
+			{
+				mem::NopEx((BYTE*)(moduleBase + 0x21B528D), 4, hProcess);
+				ClearScreen();
+				Menu();
+			}
+			else
+			{
+				mem::PatchEx((BYTE*)(moduleBase + 0x21B528D), (BYTE*)"\xF3\x0F\x11\x12", 4, hProcess);
 			}
 		}
 		if (GetAsyncKeyState(VK_NUMPAD2) & 1)
