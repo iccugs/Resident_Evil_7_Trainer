@@ -53,13 +53,11 @@ int main()
 			bHealth = !bHealth;
 			if (bHealth)
 			{
-				mem::NopEx((BYTE*)(moduleBase + 0xB1EE1F), 5, hProcess);
 				ClearScreen();
 				Menu();
 			}
 			else
 			{
-				mem::PatchEx((BYTE*)(moduleBase + 0xB1EE1F), (BYTE*)"\xF3\x0F\x11\x52\x24", 5, hProcess);
 				ClearScreen();
 				Menu();
 			}
