@@ -5,7 +5,7 @@
 #include "proc.h"
 #include "mem.h"
 #include "ascii.h"
-bool bHealth = false, bO2= false, bAmmo = false, bGrenades = false;
+bool bHealth = false, bO2= false, bAmmo = false, bGrenades = false, bCoin = false;
 void Menu()
 {
 	std::cout << "HOTKEY = FUNCTIONS = STATUS\n";
@@ -13,7 +13,8 @@ void Menu()
 	std::cout << "NUM0 = INFINITE HEALTH = " << bHealth << "\n";
 	std::cout << "NUM1 = INFINITE O2 = " << bO2 << "\n";
 	std::cout << "NUM2 = INFINITE AMMO = " << bAmmo << "\n";
-	std::cout << "NUM3 = INFINITE GRENADES = " << bGrenades << "\n\n";
+	std::cout << "NUM3 = INFINITE GRENADES = " << bGrenades << "\n";
+	std::cout << "NUM4 = INFINITE COIN = " << bCoin << "\n\n";
 	std::cout << "INSERT = EXIT TRAINER\n";
 }
 int main()
@@ -22,7 +23,7 @@ int main()
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(hConsole, 13);
 	uintptr_t moduleBase = 0, playerPtr = 0, playerPtr2 = 0, healthAddr = 0, o2Addr = 0;
-	const float maxHealth = 3000, maxO2 = 100;
+	const float maxHealth = 9999, maxO2 = 100;
 	DWORD procId = GetProcId(L"re7.exe");
 	if (procId)
 	{
@@ -111,6 +112,22 @@ int main()
 			else
 			{
 				mem::PatchEx((BYTE*)(moduleBase + 0x16874D5), (BYTE*)"\xFF\xC8", 2, hProcess);
+				ClearScreen();
+				Menu();
+			}
+		}
+		if (GetAsyncKeyState(VK_NUMPAD4) & 1)
+		{
+			bCoin = !bCoin;
+			if (bCoin)
+			{
+				mem::PatchEx((BYTE*)(moduleBase + 0x41BA09), (BYTE*)"\x8B\xB7\x88\x00\x00\x00", 6, hProcess);
+				ClearScreen();
+				Menu();
+			}
+			else
+			{
+				mem::PatchEx((BYTE*)(moduleBase + 0x41BA09), (BYTE*)"\x89\xB7\x88\x00\x00\x00", 6, hProcess);
 				ClearScreen();
 				Menu();
 			}

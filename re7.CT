@@ -290,9 +290,79 @@ re7.exe+1687500: 3B F8                    - cmp edi,eax
 </AssemblerScript>
     </CheatEntry>
     <CheatEntry>
+      <ID>31</ID>
+      <Description>"Infinite Coins"</Description>
+      <LastState/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>{ Game   : re7.exe
+  Version: 
+  Date   : 2021-05-15
+  Author : john
+
+  This script does blah blah blah
+}
+
+[ENABLE]
+
+aobscanmodule(infCoin,re7.exe,89 B7 88 00 00 00 75) // should be unique
+alloc(newmem,$1000,infCoin)
+
+label(code)
+label(return)
+
+newmem:
+
+code:
+  mov esi,[rdi+00000088]
+  jmp return
+
+infCoin:
+  jmp newmem
+  nop
+return:
+registersymbol(infCoin)
+
+[DISABLE]
+
+infCoin:
+  db 89 B7 88 00 00 00
+
+unregistersymbol(infCoin)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: re7.exe+41BA09
+
+re7.exe+41B9E8: 74 7B              - je re7.exe+41BA65
+re7.exe+41B9EA: 8B B7 88 00 00 00  - mov esi,[rdi+00000088]
+re7.exe+41B9F0: 45 8B C7           - mov r8d,r15d
+re7.exe+41B9F3: 8B D6              - mov edx,esi
+re7.exe+41B9F5: E8 56 94 DB 01     - call re7.exe+21D4E50
+re7.exe+41B9FA: 48 8B 4B 50        - mov rcx,[rbx+50]
+re7.exe+41B9FE: 44 8B F0           - mov r14d,eax
+re7.exe+41BA01: 48 39 69 18        - cmp [rcx+18],rbp
+re7.exe+41BA05: 75 54              - jne re7.exe+41BA5B
+re7.exe+41BA07: 2B F0              - sub esi,eax
+// ---------- INJECTING HERE ----------
+re7.exe+41BA09: 89 B7 88 00 00 00  - mov [rdi+00000088],esi
+// ---------- DONE INJECTING  ----------
+re7.exe+41BA0F: 75 37              - jne re7.exe+41BA48
+re7.exe+41BA11: 4D 8B C5           - mov r8,r13
+re7.exe+41BA14: 48 8B D7           - mov rdx,rdi
+re7.exe+41BA17: 48 8B CB           - mov rcx,rbx
+re7.exe+41BA1A: E8 41 3E 5C 01     - call re7.exe+19DF860
+re7.exe+41BA1F: 48 8B 4B 50        - mov rcx,[rbx+50]
+re7.exe+41BA23: 48 39 69 18        - cmp [rcx+18],rbp
+re7.exe+41BA27: 75 32              - jne re7.exe+41BA5B
+re7.exe+41BA29: 45 84 E4           - test r12l,r12l
+re7.exe+41BA2C: 74 1A              - je re7.exe+41BA48
+}
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
       <ID>19</ID>
       <Description>"health pointer"</Description>
-      <LastState Value="3000" RealAddress="16A7118FB84"/>
+      <LastState Value="3000" RealAddress="16A747A4244"/>
       <VariableType>Float</VariableType>
       <Address>"re7.exe"+081EA150</Address>
       <Offsets>
@@ -461,6 +531,58 @@ re7.exe+1687500: 3B F8                    - cmp edi,eax
         <Byte>CC</Byte>
         <Byte>CC</Byte>
         <Byte>CC</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry Color="80000008">
+      <Description>Change of mov ecx,[rbp+00000088]</Description>
+      <AddressString>re7.exe+816064</AddressString>
+      <Before>
+        <Byte>79</Byte>
+        <Byte>18</Byte>
+        <Byte>00</Byte>
+        <Byte>75</Byte>
+        <Byte>3A</Byte>
+      </Before>
+      <Actual>
+        <Byte>8B</Byte>
+        <Byte>8D</Byte>
+        <Byte>88</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>48</Byte>
+        <Byte>8D</Byte>
+        <Byte>54</Byte>
+        <Byte>24</Byte>
+        <Byte>20</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry Color="80000008">
+      <Description>Change of mov [rdi+00000088],esi</Description>
+      <AddressString>re7.exe+41BA09</AddressString>
+      <Before>
+        <Byte>18</Byte>
+        <Byte>75</Byte>
+        <Byte>54</Byte>
+        <Byte>2B</Byte>
+        <Byte>F0</Byte>
+      </Before>
+      <Actual>
+        <Byte>89</Byte>
+        <Byte>B7</Byte>
+        <Byte>88</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>75</Byte>
+        <Byte>37</Byte>
+        <Byte>4D</Byte>
+        <Byte>8B</Byte>
+        <Byte>C5</Byte>
       </After>
     </CodeEntry>
   </CheatCodes>
