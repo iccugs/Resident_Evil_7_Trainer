@@ -2,150 +2,26 @@
 <CheatTable CheatEngineTableVersion="34">
   <CheatEntries>
     <CheatEntry>
-      <ID>15</ID>
-      <Description>"Infinite Health"</Description>
-      <LastState/>
-      <VariableType>Auto Assembler Script</VariableType>
-      <AssemblerScript>{ Game   : re7.exe
-  Version: 
-  Date   : 2021-05-14
-  Author : Paradox
-
-  This script negates all health damage even to certain boss enemies
-}
-
-[ENABLE]
-
-aobscanmodule(infHealth,re7.exe,F3 0F 11 52 24 66 0F 2F C1 72 20) // should be unique
-alloc(newmem,$1000,infHealth)
-
-label(code)
-label(return)
-
-newmem:
-
-code:
-  nop
-  nop
-  nop
-  nop
-  nop
-  jmp return
-
-infHealth:
-  jmp newmem
-return:
-registersymbol(infHealth)
-
-[DISABLE]
-
-infHealth:
-  db F3 0F 11 52 24
-
-unregistersymbol(infHealth)
-dealloc(newmem)
-
-{
-// ORIGINAL CODE - INJECTION POINT: re7.exe+B1EE1F
-
-re7.exe+B1EE0A: CC                 - int 3 
-re7.exe+B1EE0B: CC                 - int 3 
-re7.exe+B1EE0C: CC                 - int 3 
-re7.exe+B1EE0D: CC                 - int 3 
-re7.exe+B1EE0E: CC                 - int 3 
-re7.exe+B1EE0F: CC                 - int 3 
-re7.exe+B1EE10: F3 0F 10 5A 20     - movss xmm3,[rdx+20]
-re7.exe+B1EE15: 0F 57 C9           - xorps xmm1,xmm1
-re7.exe+B1EE18: 0F 5A C3           - cvtps2pd xmm0,xmm3
-re7.exe+B1EE1B: F3 0F 5A CA        - cvtss2sd xmm1,xmm2
-// ---------- INJECTING HERE ----------
-re7.exe+B1EE1F: F3 0F 11 52 24     - movss [rdx+24],xmm2
-// ---------- DONE INJECTING  ----------
-re7.exe+B1EE24: 66 0F 2F C1        - comisd xmm0,xmm1
-re7.exe+B1EE28: 72 20              - jb re7.exe+B1EE4A
-re7.exe+B1EE2A: 33 C0              - xor eax,eax
-re7.exe+B1EE2C: 0F 57 C9           - xorps xmm1,xmm1
-re7.exe+B1EE2F: 89 44 24 18        - mov [rsp+18],eax
-re7.exe+B1EE33: F3 0F 10 44 24 18  - movss xmm0,[rsp+18]
-re7.exe+B1EE39: 0F 5A C0           - cvtps2pd xmm0,xmm0
-re7.exe+B1EE3C: F3 0F 5A CA        - cvtss2sd xmm1,xmm2
-re7.exe+B1EE40: 66 0F 2F C8        - comisd xmm1,xmm0
-re7.exe+B1EE44: 73 09              - jae re7.exe+B1EE4F
-}
-</AssemblerScript>
+      <ID>19</ID>
+      <Description>"health pointer"</Description>
+      <VariableType>Float</VariableType>
+      <Address>"re7.exe"+081EA150</Address>
+      <Offsets>
+        <Offset>24</Offset>
+        <Offset>70</Offset>
+        <Offset>28</Offset>
+        <Offset>28</Offset>
+      </Offsets>
     </CheatEntry>
     <CheatEntry>
-      <ID>17</ID>
-      <Description>"Infinite O2"</Description>
-      <LastState/>
-      <VariableType>Auto Assembler Script</VariableType>
-      <AssemblerScript>{ Game   : re7.exe
-  Version: 
-  Date   : 2021-05-14
-  Author : Paradox
-
-  Infinite O2 script
-}
-
-[ENABLE]
-
-aobscanmodule(infO2,re7.exe,00 F3 0F 11 12 C3) // should be unique
-alloc(newmem,$1000,infO2)
-
-label(code)
-label(return)
-
-newmem:
-
-code:
-  nop
-  nop
-  nop
-  nop
-  ret 
-  jmp return
-
-infO2+01:
-  jmp newmem
-return:
-registersymbol(infO2)
-
-[DISABLE]
-
-infO2+01:
-  db F3 0F 11 12 C3
-
-unregistersymbol(infO2)
-dealloc(newmem)
-
-{
-// ORIGINAL CODE - INJECTION POINT: re7.exe+21B528D
-
-re7.exe+21B526B: 48 83 79 40 00  - cmp qword ptr [rcx+40],00
-re7.exe+21B5270: 74 1B           - je re7.exe+21B528D
-re7.exe+21B5272: F3 0F 10 02     - movss xmm0,[rdx]
-re7.exe+21B5276: 0F 2E C2        - ucomiss xmm0,xmm2
-re7.exe+21B5279: 7A 02           - jp re7.exe+21B527D
-re7.exe+21B527B: 74 14           - je re7.exe+21B5291
-re7.exe+21B527D: F3 0F 11 12     - movss [rdx],xmm2
-re7.exe+21B5281: 48 8B D1        - mov rdx,rcx
-re7.exe+21B5284: 48 8B 49 40     - mov rcx,[rcx+40]
-re7.exe+21B5288: E9 93 28 00 00  - jmp re7.exe+21B7B20
-// ---------- INJECTING HERE ----------
-re7.exe+21B528D: F3 0F 11 12     - movss [rdx],xmm2
-// ---------- DONE INJECTING  ----------
-re7.exe+21B5291: C3              - ret 
-re7.exe+21B5292: CC              - int 3 
-re7.exe+21B5293: CC              - int 3 
-re7.exe+21B5294: CC              - int 3 
-re7.exe+21B5295: CC              - int 3 
-re7.exe+21B5296: CC              - int 3 
-re7.exe+21B5297: CC              - int 3 
-re7.exe+21B5298: CC              - int 3 
-re7.exe+21B5299: CC              - int 3 
-re7.exe+21B529A: CC              - int 3 
-}
-</AssemblerScript>
+      <ID>24</ID>
+      <Description>"O2 pointer"</Description>
+      <VariableType>Float</VariableType>
+      <Address>"re7.exe"+081F01C0</Address>
+      <Offsets>
+        <Offset>20</Offset>
+        <Offset>D8</Offset>
+      </Offsets>
     </CheatEntry>
     <CheatEntry>
       <ID>27</ID>
@@ -290,83 +166,8 @@ re7.exe+1687500: 3B F8                    - cmp edi,eax
 </AssemblerScript>
     </CheatEntry>
     <CheatEntry>
-      <ID>31</ID>
-      <Description>"Infinite Coins"</Description>
-      <LastState/>
-      <VariableType>Auto Assembler Script</VariableType>
-      <AssemblerScript>{ Game   : re7.exe
-  Version: 
-  Date   : 2021-05-15
-  Author : Paradox
-
-  nop instructions for decreasing coins
-}
-
-[ENABLE]
-
-aobscanmodule(infCoin,re7.exe,89 B7 88 00 00 00 75) // should be unique
-alloc(newmem,$1000,infCoin)
-
-label(code)
-label(return)
-
-newmem:
-
-code:
-  nop
-  nop
-  nop
-  nop
-  nop
-  nop
-  jmp return
-
-infCoin:
-  jmp newmem
-  nop
-return:
-registersymbol(infCoin)
-
-[DISABLE]
-
-infCoin:
-  db 89 B7 88 00 00 00
-
-unregistersymbol(infCoin)
-dealloc(newmem)
-
-{
-// ORIGINAL CODE - INJECTION POINT: re7.exe+41BA09
-
-re7.exe+41B9E8: 74 7B              - je re7.exe+41BA65
-re7.exe+41B9EA: 8B B7 88 00 00 00  - mov esi,[rdi+00000088]
-re7.exe+41B9F0: 45 8B C7           - mov r8d,r15d
-re7.exe+41B9F3: 8B D6              - mov edx,esi
-re7.exe+41B9F5: E8 56 94 DB 01     - call re7.exe+21D4E50
-re7.exe+41B9FA: 48 8B 4B 50        - mov rcx,[rbx+50]
-re7.exe+41B9FE: 44 8B F0           - mov r14d,eax
-re7.exe+41BA01: 48 39 69 18        - cmp [rcx+18],rbp
-re7.exe+41BA05: 75 54              - jne re7.exe+41BA5B
-re7.exe+41BA07: 2B F0              - sub esi,eax
-// ---------- INJECTING HERE ----------
-re7.exe+41BA09: 89 B7 88 00 00 00  - mov [rdi+00000088],esi
-// ---------- DONE INJECTING  ----------
-re7.exe+41BA0F: 75 37              - jne re7.exe+41BA48
-re7.exe+41BA11: 4D 8B C5           - mov r8,r13
-re7.exe+41BA14: 48 8B D7           - mov rdx,rdi
-re7.exe+41BA17: 48 8B CB           - mov rcx,rbx
-re7.exe+41BA1A: E8 41 3E 5C 01     - call re7.exe+19DF860
-re7.exe+41BA1F: 48 8B 4B 50        - mov rcx,[rbx+50]
-re7.exe+41BA23: 48 39 69 18        - cmp [rcx+18],rbp
-re7.exe+41BA27: 75 32              - jne re7.exe+41BA5B
-re7.exe+41BA29: 45 84 E4           - test r12l,r12l
-re7.exe+41BA2C: 74 1A              - je re7.exe+41BA48
-}
-</AssemblerScript>
-    </CheatEntry>
-    <CheatEntry>
       <ID>36</ID>
-      <Description>"Cage Glitch"</Description>
+      <Description>"Infinite Items"</Description>
       <LastState/>
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>{ Game   : re7.exe
@@ -434,30 +235,6 @@ re7.exe+41BA09: 89 B7 88 00 00 00  - mov [rdi+00000088],esi
 re7.exe+41BA0F: 75 37              - jne re7.exe+41BA48
 }
 </AssemblerScript>
-    </CheatEntry>
-    <CheatEntry>
-      <ID>19</ID>
-      <Description>"health pointer"</Description>
-      <LastState Value="3000" RealAddress="1C3353EC124"/>
-      <VariableType>Float</VariableType>
-      <Address>"re7.exe"+081EA150</Address>
-      <Offsets>
-        <Offset>24</Offset>
-        <Offset>70</Offset>
-        <Offset>28</Offset>
-        <Offset>28</Offset>
-      </Offsets>
-    </CheatEntry>
-    <CheatEntry>
-      <ID>24</ID>
-      <Description>"O2 pointer"</Description>
-      <LastState Value="100" RealAddress="1C330184720"/>
-      <VariableType>Float</VariableType>
-      <Address>"re7.exe"+081F01C0</Address>
-      <Offsets>
-        <Offset>20</Offset>
-        <Offset>D8</Offset>
-      </Offsets>
     </CheatEntry>
   </CheatEntries>
   <CheatCodes>
@@ -661,7 +438,7 @@ re7.exe+41BA0F: 75 37              - jne re7.exe+41BA48
         <Byte>C5</Byte>
       </After>
     </CodeEntry>
-    <CodeEntry Color="80000008">
+    <CodeEntry Color="20000000">
       <Description>Change of movss [rcx+00000584],xmm1</Description>
       <AddressString>re7.exe+25B2170</AddressString>
       <Before>
@@ -689,7 +466,7 @@ re7.exe+41BA0F: 75 37              - jne re7.exe+41BA48
         <Byte>00</Byte>
       </After>
     </CodeEntry>
-    <CodeEntry Color="80000008">
+    <CodeEntry Color="20000000">
       <Description>Change of mov byte ptr [rcx+00000524],01</Description>
       <AddressString>re7.exe+25B2178</AddressString>
       <Before>
@@ -716,7 +493,7 @@ re7.exe+41BA0F: 75 37              - jne re7.exe+41BA48
         <Byte>05</Byte>
       </After>
     </CodeEntry>
-    <CodeEntry Color="80000008">
+    <CodeEntry Color="20000000">
       <Description>Change of mov [rcx],edx</Description>
       <AddressString>nvwgf2umx.dll+B71183</AddressString>
       <Before>
@@ -738,7 +515,7 @@ re7.exe+41BA0F: 75 37              - jne re7.exe+41BA48
         <Byte>00</Byte>
       </After>
     </CodeEntry>
-    <CodeEntry Color="80000008">
+    <CodeEntry Color="20000000">
       <Description>Change of mov rdx,rcx</Description>
       <AddressString>re7.exe+21B5281</AddressString>
       <Before>
@@ -761,7 +538,7 @@ re7.exe+41BA0F: 75 37              - jne re7.exe+41BA48
         <Byte>E9</Byte>
       </After>
     </CodeEntry>
-    <CodeEntry Color="80000008">
+    <CodeEntry Color="20000000">
       <Description>Change of mov rcx,[rcx+40]</Description>
       <AddressString>re7.exe+21B5284</AddressString>
       <Before>
@@ -785,7 +562,7 @@ re7.exe+41BA0F: 75 37              - jne re7.exe+41BA48
         <Byte>00</Byte>
       </After>
     </CodeEntry>
-    <CodeEntry Color="80000008">
+    <CodeEntry Color="20000000">
       <Description>Change of jmp re7.exe+21B7B20</Description>
       <AddressString>re7.exe+21B5288</AddressString>
       <Before>
@@ -810,7 +587,7 @@ re7.exe+41BA0F: 75 37              - jne re7.exe+41BA48
         <Byte>C3</Byte>
       </After>
     </CodeEntry>
-    <CodeEntry Color="80000008">
+    <CodeEntry Color="20000000">
       <Description>Change of movss [rdx],xmm2</Description>
       <AddressString>re7.exe+21B527D</AddressString>
       <Before>
@@ -834,7 +611,7 @@ re7.exe+41BA0F: 75 37              - jne re7.exe+41BA48
         <Byte>8B</Byte>
       </After>
     </CodeEntry>
-    <CodeEntry Color="80000008">
+    <CodeEntry Color="20000000">
       <Description>Change of movss xmm0,[rdx]</Description>
       <AddressString>re7.exe+21B5272</AddressString>
       <Before>
@@ -858,7 +635,7 @@ re7.exe+41BA0F: 75 37              - jne re7.exe+41BA48
         <Byte>02</Byte>
       </After>
     </CodeEntry>
-    <CodeEntry Color="80000008">
+    <CodeEntry Color="20000000">
       <Description>Change of ucomiss xmm0,xmm2</Description>
       <AddressString>re7.exe+21B5276</AddressString>
       <Before>
