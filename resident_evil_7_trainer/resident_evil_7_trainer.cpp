@@ -5,7 +5,7 @@
 #include "proc.h"
 #include "mem.h"
 #include "ascii.h"
-bool bHealth = false, bO2= false, bAmmo = false, bGrenades = false, bCoin = false;
+bool bHealth = false, bO2= false, bAmmo = false, bGrenades = false, bItems = false;
 void Menu()
 {
 	std::cout << "HOTKEY = FUNCTIONS = STATUS\n";
@@ -14,7 +14,7 @@ void Menu()
 	std::cout << "NUM1 = INFINITE O2 = " << bO2 << "\n";
 	std::cout << "NUM2 = INFINITE AMMO = " << bAmmo << "\n";
 	std::cout << "NUM3 = INFINITE GRENADES = " << bGrenades << "\n";
-	std::cout << "NUM4 = INFINITE COIN = " << bCoin << "\n\n";
+	std::cout << "NUM4 = INFINITE ITEMS = " << bItems << "\n\n";
 	std::cout << "INSERT = EXIT TRAINER\n";
 }
 int main()
@@ -118,16 +118,16 @@ int main()
 		}
 		if (GetAsyncKeyState(VK_NUMPAD4) & 1)
 		{
-			bCoin = !bCoin;
-			if (bCoin)
+			bItems = !bItems;
+			if (bItems)
 			{
-				mem::PatchEx((BYTE*)(moduleBase + 0x41BA09), (BYTE*)"\x8B\xB7\x88\x00\x00\x00", 6, hProcess);
+				mem::PatchEx((BYTE*)(moduleBase + 0x41B9EA), (BYTE*)"\x89\xB7\x88\x00\x00\x00", 6, hProcess);
 				ClearScreen();
 				Menu();
 			}
 			else
 			{
-				mem::PatchEx((BYTE*)(moduleBase + 0x41BA09), (BYTE*)"\x89\xB7\x88\x00\x00\x00", 6, hProcess);
+				mem::PatchEx((BYTE*)(moduleBase + 0x41B9EA), (BYTE*)"\x8B\xB7\x88\x00\x00\x00", 6, hProcess);
 				ClearScreen();
 				Menu();
 			}
