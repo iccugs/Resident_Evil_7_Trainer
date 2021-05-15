@@ -148,21 +148,21 @@ re7.exe+21B529A: CC              - int 3
 </AssemblerScript>
     </CheatEntry>
     <CheatEntry>
-      <ID>1</ID>
+      <ID>27</ID>
       <Description>"Infinite Ammo"</Description>
       <LastState/>
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>{ Game   : re7.exe
   Version: 
-  Date   : 2021-05-14
-  Author : Paradox
+  Date   : 2021-05-15
+  Author : john
 
-  Infinite Ammo Script
+  This script does blah blah blah
 }
 
 [ENABLE]
 
-aobscanmodule(infAmmo,re7.exe,BB 01 89 5F 24 48 8B 5C 24 30) // should be unique
+aobscanmodule(infAmmo,re7.exe,41 FF C8 48 8B D3) // should be unique
 alloc(newmem,$1000,infAmmo)
 
 label(code)
@@ -171,63 +171,61 @@ label(return)
 newmem:
 
 code:
-  nop
-  nop
-  nop
-  mov rbx,[rsp+30]
+  inc r8d
+  mov rdx,rbx
   jmp return
 
-infAmmo+02:
+infAmmo:
   jmp newmem
-  nop 3
+  nop
 return:
 registersymbol(infAmmo)
 
 [DISABLE]
 
-infAmmo+02:
-  db 89 5F 24 48 8B 5C 24 30
+infAmmo:
+  db 41 FF C8 48 8B D3
 
 unregistersymbol(infAmmo)
 dealloc(newmem)
 
 {
-// ORIGINAL CODE - INJECTION POINT: re7.exe+5E4FFB
+// ORIGINAL CODE - INJECTION POINT: re7.exe+608DCC
 
-re7.exe+5E4FD9: 48 85 FF        - test rdi,rdi
-re7.exe+5E4FDC: 75 1D           - jne re7.exe+5E4FFB
-re7.exe+5E4FDE: 45 33 C0        - xor r8d,r8d
-re7.exe+5E4FE1: 8D 50 26        - lea edx,[rax+26]
-re7.exe+5E4FE4: 48 8B CE        - mov rcx,rsi
-re7.exe+5E4FE7: 48 8B 5C 24 30  - mov rbx,[rsp+30]
-re7.exe+5E4FEC: 48 8B 74 24 38  - mov rsi,[rsp+38]
-re7.exe+5E4FF1: 48 83 C4 20     - add rsp,20
-re7.exe+5E4FF5: 5F              - pop rdi
-re7.exe+5E4FF6: E9 25 3F BB 01  - jmp re7.exe+2198F20
+re7.exe+608DAE: 85 C9                 - test ecx,ecx
+re7.exe+608DB0: 0F 9E C0              - setle al
+re7.exe+608DB3: 48 85 D2              - test rdx,rdx
+re7.exe+608DB6: 75 97                 - jne re7.exe+608D4F
+re7.exe+608DB8: 84 C0                 - test al,al
+re7.exe+608DBA: 75 93                 - jne re7.exe+608D4F
+re7.exe+608DBC: 48 8B 83 78 01 00 00  - mov rax,[rbx+00000178]
+re7.exe+608DC3: 48 85 C0              - test rax,rax
+re7.exe+608DC6: 74 04                 - je re7.exe+608DCC
+re7.exe+608DC8: 44 8B 40 24           - mov r8d,[rax+24]
 // ---------- INJECTING HERE ----------
-re7.exe+5E4FFB: 89 5F 24        - mov [rdi+24],ebx
+re7.exe+608DCC: 41 FF C8              - dec r8d
 // ---------- DONE INJECTING  ----------
-re7.exe+5E4FFE: 48 8B 5C 24 30  - mov rbx,[rsp+30]
-re7.exe+5E5003: 48 8B 74 24 38  - mov rsi,[rsp+38]
-re7.exe+5E5008: 48 83 C4 20     - add rsp,20
-re7.exe+5E500C: 5F              - pop rdi
-re7.exe+5E500D: C3              - ret 
-re7.exe+5E500E: CC              - int 3 
-re7.exe+5E500F: CC              - int 3 
-re7.exe+5E5010: 48 89 5C 24 10  - mov [rsp+10],rbx
-re7.exe+5E5015: 56              - push rsi
-re7.exe+5E5016: 48 83 EC 20     - sub rsp,20
+re7.exe+608DCF: 48 8B D3              - mov rdx,rbx
+re7.exe+608DD2: 48 8B CF              - mov rcx,rdi
+re7.exe+608DD5: E8 B6 C1 FD FF        - call re7.exe+5E4F90
+re7.exe+608DDA: 48 8B 47 50           - mov rax,[rdi+50]
+re7.exe+608DDE: 48 83 78 18 00        - cmp qword ptr [rax+18],00
+re7.exe+608DE3: 0F 94 C0              - sete al
+re7.exe+608DE6: 48 8B 5C 24 30        - mov rbx,[rsp+30]
+re7.exe+608DEB: 48 83 C4 20           - add rsp,20
+re7.exe+608DEF: 5F                    - pop rdi
+re7.exe+608DF0: C3                    - ret 
 }
 </AssemblerScript>
     </CheatEntry>
     <CheatEntry>
-      <ID>6</ID>
+      <ID>30</ID>
       <Description>"Infinite Grenades"</Description>
       <LastState/>
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>{ Game   : re7.exe
   Version: 
-  Date   : 2021-05-14
+  Date   : 2021-05-15
   Author : john
 
   This script does blah blah blah
@@ -235,7 +233,7 @@ re7.exe+5E5016: 48 83 EC 20     - sub rsp,20
 
 [ENABLE]
 
-aobscanmodule(infGrenades,re7.exe,89 BE 88 00 00 00 E8) // should be unique
+aobscanmodule(infGrenades,re7.exe,FF C8 48 89 BC 24 90 00 00 00) // should be unique
 alloc(newmem,$1000,infGrenades)
 
 label(code)
@@ -244,63 +242,76 @@ label(return)
 newmem:
 
 code:
-  nop
-  nop
-  nop
-  nop
-  nop
-  nop
+  inc eax
+  mov [rsp+00000090],rdi
   jmp return
 
 infGrenades:
   jmp newmem
-  nop
+  nop 5
 return:
 registersymbol(infGrenades)
 
 [DISABLE]
 
 infGrenades:
-  db 89 BE 88 00 00 00
+  db FF C8 48 89 BC 24 90 00 00 00
 
 unregistersymbol(infGrenades)
 dealloc(newmem)
 
 {
-// ORIGINAL CODE - INJECTION POINT: re7.exe+16874E7
+// ORIGINAL CODE - INJECTION POINT: re7.exe+16874D5
 
+re7.exe+16874AE: 0F 84 EF 02 00 00        - je re7.exe+16877A3
+re7.exe+16874B4: 48 8B CB                 - mov rcx,rbx
+re7.exe+16874B7: 48 85 F6                 - test rsi,rsi
+re7.exe+16874BA: 75 10                    - jne re7.exe+16874CC
+re7.exe+16874BC: 45 33 C0                 - xor r8d,r8d
 re7.exe+16874BF: 8D 56 26                 - lea edx,[rsi+26]
 re7.exe+16874C2: E8 59 1A B1 00           - call re7.exe+2198F20
 re7.exe+16874C7: E9 D7 02 00 00           - jmp re7.exe+16877A3
 re7.exe+16874CC: 8B 86 88 00 00 00        - mov eax,[rsi+00000088]
 re7.exe+16874D2: 48 8B D6                 - mov rdx,rsi
+// ---------- INJECTING HERE ----------
 re7.exe+16874D5: FF C8                    - dec eax
+// ---------- DONE INJECTING  ----------
 re7.exe+16874D7: 48 89 BC 24 90 00 00 00  - mov [rsp+00000090],rdi
 re7.exe+16874DF: 85 C0                    - test eax,eax
 re7.exe+16874E1: 41 8B FE                 - mov edi,r14d
 re7.exe+16874E4: 0F 4F F8                 - cmovg edi,eax
-// ---------- INJECTING HERE ----------
 re7.exe+16874E7: 89 BE 88 00 00 00        - mov [rsi+00000088],edi
-// ---------- DONE INJECTING  ----------
 re7.exe+16874ED: E8 9E 50 EB FE           - call re7.exe+53C590
 re7.exe+16874F2: 48 8B 4B 50              - mov rcx,[rbx+50]
 re7.exe+16874F6: 4C 39 61 18              - cmp [rcx+18],r12
 re7.exe+16874FA: 0F 85 9B 02 00 00        - jne re7.exe+168779B
 re7.exe+1687500: 3B F8                    - cmp edi,eax
-re7.exe+1687502: 0F 8D 55 02 00 00        - jnl re7.exe+168775D
-re7.exe+1687508: 49 8B 87 30 01 00 00     - mov rax,[r15+00000130]
-re7.exe+168750F: 48 8B CB                 - mov rcx,rbx
-re7.exe+1687512: 49 8B 97 E0 00 00 00     - mov rdx,[r15+000000E0]
-re7.exe+1687519: 48 85 C0                 - test rax,rax
 }
 </AssemblerScript>
     </CheatEntry>
     <CheatEntry>
-      <ID>14</ID>
-      <Description>"health1"</Description>
-      <LastState Value="2064.0625" RealAddress="29139CF3304"/>
+      <ID>19</ID>
+      <Description>"health pointer"</Description>
+      <LastState Value="3000" RealAddress="16A7118FB84"/>
       <VariableType>Float</VariableType>
-      <Address>29139CF3304</Address>
+      <Address>"re7.exe"+081EA150</Address>
+      <Offsets>
+        <Offset>24</Offset>
+        <Offset>70</Offset>
+        <Offset>28</Offset>
+        <Offset>28</Offset>
+      </Offsets>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>24</ID>
+      <Description>"O2 pointer"</Description>
+      <LastState Value="100" RealAddress="16A71D20CC0"/>
+      <VariableType>Float</VariableType>
+      <Address>"re7.exe"+081F01C0</Address>
+      <Offsets>
+        <Offset>20</Offset>
+        <Offset>D8</Offset>
+      </Offsets>
     </CheatEntry>
   </CheatEntries>
   <CheatCodes>
@@ -428,7 +439,7 @@ re7.exe+1687519: 48 85 C0                 - test rax,rax
         <Byte>72</Byte>
       </After>
     </CodeEntry>
-    <CodeEntry Color="80000008">
+    <CodeEntry Color="20000000">
       <Description>Change of movss [rdx],xmm2</Description>
       <AddressString>re7.exe+21B528D</AddressString>
       <Before>

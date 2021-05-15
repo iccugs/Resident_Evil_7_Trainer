@@ -21,7 +21,8 @@ int main()
 	HANDLE hProcess = 0;
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(hConsole, 13);
-	uintptr_t moduleBase = 0;
+	uintptr_t moduleBase = 0, playerPtr = 0, playerPtr2 = 0, healthAddr = 0, o2Addr = 0;
+	const float maxHealth = 3000, maxO2 = 100;
 	DWORD procId = GetProcId(L"re7.exe");
 	if (procId)
 	{
@@ -41,48 +42,59 @@ int main()
 	DWORD dwExit = 0;
 	while (GetExitCodeProcess(hProcess, &dwExit) && dwExit == STILL_ACTIVE)
 	{
+		playerPtr = moduleBase + 0x081EA150;
+		playerPtr2 = moduleBase + 0x081F01C0;
+		healthAddr = FindDMAAddy(hProcess, playerPtr, { 0x28,0x28,0x70,0x24 });
+		o2Addr = FindDMAAddy(hProcess, playerPtr2, { 0xD8,0x20 });
+
 		if (GetAsyncKeyState(VK_NUMPAD0) & 1)
 		{
 			bHealth = !bHealth;
 			if (bHealth)
 			{
-				mem::NopEx((BYTE*)(moduleBase + 0xB1EE1F), 5, hProcess);
 				ClearScreen();
 				Menu();
 			}
 			else
 			{
-				mem::PatchEx((BYTE*)(moduleBase + 0xB1EE1F), (BYTE*)"\xF3\x0F\x11\x52\x24", 5, hProcess);
 				ClearScreen();
 				Menu();
 			}
+		}
+		if (bHealth)
+		{
+			mem::PatchEx((BYTE*)healthAddr, (BYTE*)&maxHealth, sizeof(maxHealth), hProcess);
 		}
 		if (GetAsyncKeyState(VK_NUMPAD1) & 1)
 		{
 			bO2 = !bO2;
 			if (bO2)
 			{
-				mem::NopEx((BYTE*)(moduleBase + 0x21B528D), 4, hProcess);
 				ClearScreen();
 				Menu();
 			}
 			else
 			{
-				mem::PatchEx((BYTE*)(moduleBase + 0x21B528D), (BYTE*)"\xF3\x0F\x11\x12", 4, hProcess);
+				ClearScreen();
+				Menu();
 			}
+		}
+		if (bO2)
+		{
+			mem::PatchEx((BYTE*)o2Addr, (BYTE*)&maxO2, sizeof(maxO2), hProcess);
 		}
 		if (GetAsyncKeyState(VK_NUMPAD2) & 1)
 		{
 			bAmmo = !bAmmo;
 			if (bAmmo)
 			{
-				mem::NopEx((BYTE*)(moduleBase + 0x5E4FFB), 3, hProcess);
+				mem::PatchEx((BYTE*)(moduleBase + 0x608DCC), (BYTE*)"\x41\xFF\xC0", 3, hProcess);
 				ClearScreen();
 				Menu();
 			}
 			else
 			{
-				mem::PatchEx((BYTE*)(moduleBase + 0x5E4FFB), (BYTE*)"\x89\x5F\x24", 3, hProcess);
+				mem::PatchEx((BYTE*)(moduleBase + 0x608DCC), (BYTE*)"\x41\xFF\xC8", 3, hProcess);
 				ClearScreen();
 				Menu();
 			}
@@ -92,13 +104,15 @@ int main()
 			bGrenades = !bGrenades;
 			if (bGrenades)
 			{
-				mem::NopEx((BYTE*)(moduleBase + 0x16874E7), 6, hProcess);
+				mem::PatchEx((BYTE*)(moduleBase + 0x16874D5), (BYTE*)"\xFF\xC0", 2, hProcess);
 				ClearScreen();
 				Menu();
 			}
 			else
 			{
-				mem::PatchEx((BYTE*)(moduleBase + 0x16874E7), (BYTE*)"\x89\xBE\x88\x00\x00\x00", 6, hProcess);
+				mem::PatchEx((BYTE*)(moduleBase + 0x16874D5), (BYTE*)"\xFF\xC8", 2, hProcess);
+				ClearScreen();
+				Menu();
 			}
 		}
 		if (GetAsyncKeyState(VK_INSERT) & 1)
