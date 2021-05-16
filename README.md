@@ -1,8 +1,6 @@
 # Resident_Evil_7_Trainer
 Trainer for Resident Evil 7
 <br>
-Currently only tested on "Not a Hero" DLC
-<br>
 <br>
 Includes:
 <br>

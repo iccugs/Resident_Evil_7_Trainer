@@ -121,7 +121,7 @@ int main()
 			bItems = !bItems;
 			if (bItems)
 			{
-				mem::PatchEx((BYTE*)(moduleBase + 0x41B9EA), (BYTE*)"\x89\xB7\x88\x00\x00\x00", 6, hProcess);
+				mem::NopEx((BYTE*)(moduleBase + 0x41B9EA), 6, hProcess);
 				ClearScreen();
 				Menu();
 			}

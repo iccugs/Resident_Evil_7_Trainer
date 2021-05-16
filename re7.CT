@@ -190,7 +190,12 @@ label(return)
 newmem:
 
 code:
-  mov [rdi+00000088],esi
+  nop
+  nop
+  nop
+  nop
+  nop
+  nop
   jmp return
 
 infCage:
@@ -656,6 +661,32 @@ re7.exe+41BA0F: 75 37              - jne re7.exe+41BA48
         <Byte>74</Byte>
         <Byte>14</Byte>
         <Byte>90</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry Color="80000008">
+      <Description>Change of mov esi,[rdi+00000088]</Description>
+      <AddressString>re7.exe+41B9EA</AddressString>
+      <Before>
+        <Byte>48</Byte>
+        <Byte>85</Byte>
+        <Byte>FF</Byte>
+        <Byte>74</Byte>
+        <Byte>7B</Byte>
+      </Before>
+      <Actual>
+        <Byte>8B</Byte>
+        <Byte>B7</Byte>
+        <Byte>88</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>45</Byte>
+        <Byte>8B</Byte>
+        <Byte>C7</Byte>
+        <Byte>8B</Byte>
+        <Byte>D6</Byte>
       </After>
     </CodeEntry>
   </CheatCodes>
