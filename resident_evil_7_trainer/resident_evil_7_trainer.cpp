@@ -121,13 +121,13 @@ int main()
 			bItems = !bItems;
 			if (bItems)
 			{
-				mem::NopEx((BYTE*)(moduleBase + 0x41B9EA), 6, hProcess);
+				mem::PatchEx((BYTE*)(moduleBase + 0x41BA07), (BYTE*)"\x01\xC6", 2, hProcess);
 				ClearScreen();
 				Menu();
 			}
 			else
 			{
-				mem::PatchEx((BYTE*)(moduleBase + 0x41B9EA), (BYTE*)"\x8B\xB7\x88\x00\x00\x00", 6, hProcess);
+				mem::PatchEx((BYTE*)(moduleBase + 0x41BA07), (BYTE*)"\x29\xC6", 2, hProcess);
 				ClearScreen();
 				Menu();
 			}

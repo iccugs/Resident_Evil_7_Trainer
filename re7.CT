@@ -4,6 +4,7 @@
     <CheatEntry>
       <ID>19</ID>
       <Description>"health pointer"</Description>
+      <LastState Value="1000" RealAddress="16D95A607E4"/>
       <VariableType>Float</VariableType>
       <Address>"re7.exe"+081EA150</Address>
       <Offsets>
@@ -16,6 +17,7 @@
     <CheatEntry>
       <ID>24</ID>
       <Description>"O2 pointer"</Description>
+      <LastState Value="100" RealAddress="16D9279DF30"/>
       <VariableType>Float</VariableType>
       <Address>"re7.exe"+081F01C0</Address>
       <Offsets>
@@ -166,23 +168,22 @@ re7.exe+1687500: 3B F8                    - cmp edi,eax
 </AssemblerScript>
     </CheatEntry>
     <CheatEntry>
-      <ID>36</ID>
+      <ID>31</ID>
       <Description>"Infinite Items"</Description>
       <LastState/>
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>{ Game   : re7.exe
   Version: 
-  Date   : 2021-05-15
+  Date   : 2021-05-16
   Author : Paradox
 
-  Loops number of items trying to be used with cage input with current value
-  making the item count for whatever you try to use with the cage very large
+  Gives items instead of subtracting items upon use
 }
 
 [ENABLE]
 
-aobscanmodule(infCage,re7.exe,8B B7 88 00 00 00 45 8B) // should be unique
-alloc(newmem,$1000,infCage)
+aobscanmodule(infItems,re7.exe,29 C6 89 B7 88 00 00 00) // should be unique
+alloc(newmem,$1000,infItems)
 
 label(code)
 label(return)
@@ -190,44 +191,30 @@ label(return)
 newmem:
 
 code:
-  nop
-  nop
-  nop
-  nop
-  nop
-  nop
+  add esi,eax
+  mov [rdi+00000088],esi
   jmp return
 
-infCage:
+infItems:
   jmp newmem
-  nop
+  nop 3
 return:
-registersymbol(infCage)
+registersymbol(infItems)
 
 [DISABLE]
 
-infCage:
-  db 8B B7 88 00 00 00
+infItems:
+  db 29 C6 89 B7 88 00 00 00
 
-unregistersymbol(infCage)
+unregistersymbol(infItems)
 dealloc(newmem)
 
 {
-// ORIGINAL CODE - INJECTION POINT: re7.exe+41B9EA
+// ORIGINAL CODE - INJECTION POINT: re7.exe+41BA07
 
-re7.exe+41B9C4: 48 39 68 18        - cmp [rax+18],rbp
-re7.exe+41B9C8: 0F 85 B2 00 00 00  - jne re7.exe+41BA80
-re7.exe+41B9CE: 85 C9              - test ecx,ecx
-re7.exe+41B9D0: 0F 84 A0 00 00 00  - je re7.exe+41BA76
-re7.exe+41B9D6: 48 8D 44 24 20     - lea rax,[rsp+20]
-re7.exe+41B9DB: 48 8B CB           - mov rcx,rbx
-re7.exe+41B9DE: 48 23 C7           - and rax,rdi
-re7.exe+41B9E1: 48 8B 78 10        - mov rdi,[rax+10]
 re7.exe+41B9E5: 48 85 FF           - test rdi,rdi
 re7.exe+41B9E8: 74 7B              - je re7.exe+41BA65
-// ---------- INJECTING HERE ----------
 re7.exe+41B9EA: 8B B7 88 00 00 00  - mov esi,[rdi+00000088]
-// ---------- DONE INJECTING  ----------
 re7.exe+41B9F0: 45 8B C7           - mov r8d,r15d
 re7.exe+41B9F3: 8B D6              - mov edx,esi
 re7.exe+41B9F5: E8 56 94 DB 01     - call re7.exe+21D4E50
@@ -235,9 +222,19 @@ re7.exe+41B9FA: 48 8B 4B 50        - mov rcx,[rbx+50]
 re7.exe+41B9FE: 44 8B F0           - mov r14d,eax
 re7.exe+41BA01: 48 39 69 18        - cmp [rcx+18],rbp
 re7.exe+41BA05: 75 54              - jne re7.exe+41BA5B
-re7.exe+41BA07: 2B F0              - sub esi,eax
+// ---------- INJECTING HERE ----------
+re7.exe+41BA07: 29 C6              - sub esi,eax
+// ---------- DONE INJECTING  ----------
 re7.exe+41BA09: 89 B7 88 00 00 00  - mov [rdi+00000088],esi
 re7.exe+41BA0F: 75 37              - jne re7.exe+41BA48
+re7.exe+41BA11: 4D 8B C5           - mov r8,r13
+re7.exe+41BA14: 48 8B D7           - mov rdx,rdi
+re7.exe+41BA17: 48 8B CB           - mov rcx,rbx
+re7.exe+41BA1A: E8 41 3E 5C 01     - call re7.exe+19DF860
+re7.exe+41BA1F: 48 8B 4B 50        - mov rcx,[rbx+50]
+re7.exe+41BA23: 48 39 69 18        - cmp [rcx+18],rbp
+re7.exe+41BA27: 75 32              - jne re7.exe+41BA5B
+re7.exe+41BA29: 45 84 E4           - test r12l,r12l
 }
 </AssemblerScript>
     </CheatEntry>
@@ -663,7 +660,7 @@ re7.exe+41BA0F: 75 37              - jne re7.exe+41BA48
         <Byte>90</Byte>
       </After>
     </CodeEntry>
-    <CodeEntry Color="80000008">
+    <CodeEntry Color="20000000">
       <Description>Change of mov esi,[rdi+00000088]</Description>
       <AddressString>re7.exe+41B9EA</AddressString>
       <Before>
@@ -1253,6 +1250,44 @@ re7.exe+41BA0F: 75 37              - jne re7.exe+41BA48
         <Element Offset="4040" Vartype="4 Bytes" Bytesize="4" RLECount="3" OffsetHex="00000FC8" DisplayMethod="Unsigned Integer"/>
         <Element Offset="4052" Vartype="Double" Bytesize="8" OffsetHex="00000FD4" DisplayMethod="Unsigned Integer"/>
         <Element Offset="4060" Vartype="4 Bytes" Bytesize="4" RLECount="9" OffsetHex="00000FDC" DisplayMethod="Unsigned Integer"/>
+      </Elements>
+    </Structure>
+    <Structure Name="unnamed structure" AutoFill="0" AutoCreate="1" DefaultHex="0" AutoDestroy="0" DoNotSaveLocal="0" RLECompression="1" AutoCreateStructsize="4096">
+      <Elements>
+        <Element Offset="0" Vartype="Pointer" Bytesize="8" OffsetHex="00000000" DisplayMethod="Unsigned Integer">
+          <Structure Name="Autocreated from 16EE025F760" AutoFill="0" AutoCreate="1" DefaultHex="0" AutoDestroy="0" DoNotSaveLocal="0" RLECompression="1" AutoCreateStructsize="4096">
+            <Elements>
+              <Element Offset="0" Vartype="Pointer" Bytesize="8" RLECount="4" OffsetHex="00000000" DisplayMethod="Unsigned Integer"/>
+              <Element Offset="32" Vartype="4 Bytes" Bytesize="4" RLECount="9" OffsetHex="00000020" DisplayMethod="Unsigned Integer"/>
+              <Element Offset="68" Vartype="4 Bytes" Bytesize="4" OffsetHex="00000044" DisplayMethod="Hexadecimal"/>
+              <Element Offset="72" Vartype="4 Bytes" Bytesize="4" RLECount="2" OffsetHex="00000048" DisplayMethod="Unsigned Integer"/>
+              <Element Offset="80" Vartype="4 Bytes" Bytesize="4" OffsetHex="00000050" DisplayMethod="Hexadecimal"/>
+              <Element Offset="84" Vartype="4 Bytes" Bytesize="4" OffsetHex="00000054" DisplayMethod="Unsigned Integer"/>
+              <Element Offset="88" Vartype="4 Bytes" Bytesize="4" OffsetHex="00000058" DisplayMethod="Hexadecimal"/>
+              <Element Offset="92" Vartype="4 Bytes" Bytesize="4" OffsetHex="0000005C" DisplayMethod="Unsigned Integer"/>
+              <Element Offset="96" Vartype="Pointer" Bytesize="8" OffsetHex="00000060" DisplayMethod="Unsigned Integer"/>
+              <Element Offset="104" Vartype="4 Bytes" Bytesize="4" RLECount="4" OffsetHex="00000068" DisplayMethod="Unsigned Integer"/>
+              <Element Offset="120" Vartype="Pointer" Bytesize="8" RLECount="2" OffsetHex="00000078" DisplayMethod="Unsigned Integer"/>
+              <Element Offset="136" Vartype="4 Bytes" Bytesize="4" RLECount="2" OffsetHex="00000088" DisplayMethod="Unsigned Integer"/>
+              <Element Offset="144" Vartype="Pointer" Bytesize="8" RLECount="318" OffsetHex="00000090" DisplayMethod="Unsigned Integer"/>
+              <Element Offset="2688" Vartype="4 Bytes" Bytesize="4" RLECount="352" OffsetHex="00000A80" DisplayMethod="Unsigned Integer"/>
+            </Elements>
+          </Structure>
+        </Element>
+        <Element Offset="8" Vartype="Pointer" Bytesize="8" RLECount="31" OffsetHex="00000008" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="256" Vartype="4 Bytes" Bytesize="4" OffsetHex="00000100" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="260" Vartype="4 Bytes" Bytesize="4" OffsetHex="00000104" DisplayMethod="Hexadecimal"/>
+        <Element Offset="264" Vartype="4 Bytes" Bytesize="4" RLECount="2" OffsetHex="00000108" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="272" Vartype="4 Bytes" Bytesize="4" OffsetHex="00000110" DisplayMethod="Hexadecimal"/>
+        <Element Offset="276" Vartype="4 Bytes" Bytesize="4" OffsetHex="00000114" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="280" Vartype="4 Bytes" Bytesize="4" OffsetHex="00000118" DisplayMethod="Hexadecimal"/>
+        <Element Offset="284" Vartype="4 Bytes" Bytesize="4" OffsetHex="0000011C" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="288" Vartype="Pointer" Bytesize="8" OffsetHex="00000120" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="296" Vartype="4 Bytes" Bytesize="4" RLECount="4" OffsetHex="00000128" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="312" Vartype="Pointer" Bytesize="8" RLECount="2" OffsetHex="00000138" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="328" Vartype="4 Bytes" Bytesize="4" RLECount="2" OffsetHex="00000148" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="336" Vartype="Pointer" Bytesize="8" RLECount="318" OffsetHex="00000150" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2880" Vartype="4 Bytes" Bytesize="4" RLECount="304" OffsetHex="00000B40" DisplayMethod="Unsigned Integer"/>
       </Elements>
     </Structure>
   </Structures>
