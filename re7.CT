@@ -3,8 +3,7 @@
   <CheatEntries>
     <CheatEntry>
       <ID>19</ID>
-      <Description>"health pointer"</Description>
-      <LastState Value="1000" RealAddress="16D95A607E4"/>
+      <Description>"Health Value"</Description>
       <VariableType>Float</VariableType>
       <Address>"re7.exe"+081EA150</Address>
       <Offsets>
@@ -16,8 +15,7 @@
     </CheatEntry>
     <CheatEntry>
       <ID>24</ID>
-      <Description>"O2 pointer"</Description>
-      <LastState Value="100" RealAddress="16D9279DF30"/>
+      <Description>"Oxygen Value (Not a Hero DLC)"</Description>
       <VariableType>Float</VariableType>
       <Address>"re7.exe"+081F01C0</Address>
       <Offsets>
@@ -27,46 +25,31 @@
     </CheatEntry>
     <CheatEntry>
       <ID>27</ID>
-      <Description>"Infinite Ammo"</Description>
+      <Description>"Increase Ammo"</Description>
       <LastState/>
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>{ Game   : re7.exe
   Version: 
-  Date   : 2021-05-15
+  Date   : 2021-05-21
   Author : Paradox
-
-  Increases ammo count instead of decrease
+  Description: Increases ammo count instead of decrease.
 }
 
 [ENABLE]
+define(incAmmo,re7.exe+608DCC)
+assert(incAmmo,41 FF C8)
+registersymbol(incAmmo)
 
-aobscanmodule(infAmmo,re7.exe,41 FF C8 48 8B D3) // should be unique
-alloc(newmem,$1000,infAmmo)
-
-label(code)
-label(return)
-
-newmem:
-
-code:
-  inc r8d
-  mov rdx,rbx
-  jmp return
-
-infAmmo:
-  jmp newmem
-  nop
-return:
-registersymbol(infAmmo)
+incAmmo:
+  db 41 FF C0 // inc r8d
 
 [DISABLE]
+incAmmo:
+  db 41 FF C8 // dec r8d
 
-infAmmo:
-  db 41 FF C8 48 8B D3
+unregistersymbol(incAmmo)
 
-unregistersymbol(infAmmo)
-dealloc(newmem)
-
+//Release
 {
 // ORIGINAL CODE - INJECTION POINT: re7.exe+608DCC
 
@@ -98,46 +81,31 @@ re7.exe+608DF0: C3                    - ret
     </CheatEntry>
     <CheatEntry>
       <ID>30</ID>
-      <Description>"Infinite Grenades"</Description>
+      <Description>"Increase Grenades"</Description>
       <LastState/>
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>{ Game   : re7.exe
   Version: 
-  Date   : 2021-05-15
+  Date   : 2021-05-21
   Author : Paradox
-
-  Increase grenade count instead of decrease
+  Description: Increase grenade count instead of decrease.
 }
 
 [ENABLE]
+define(incNade,re7.exe+16874D5)
+assert(incNade,FF C8)
+registersymbol(incNade)
 
-aobscanmodule(infGrenades,re7.exe,FF C8 48 89 BC 24 90 00 00 00) // should be unique
-alloc(newmem,$1000,infGrenades)
-
-label(code)
-label(return)
-
-newmem:
-
-code:
-  inc eax
-  mov [rsp+00000090],rdi
-  jmp return
-
-infGrenades:
-  jmp newmem
-  nop 5
-return:
-registersymbol(infGrenades)
+incNade:
+  db FF C0 // inc eax
 
 [DISABLE]
+incNade:
+  db FF C8 // dec eax
 
-infGrenades:
-  db FF C8 48 89 BC 24 90 00 00 00
+unregistersymbol(incNade)
 
-unregistersymbol(infGrenades)
-dealloc(newmem)
-
+//Release
 {
 // ORIGINAL CODE - INJECTION POINT: re7.exe+16874D5
 
@@ -169,46 +137,31 @@ re7.exe+1687500: 3B F8                    - cmp edi,eax
     </CheatEntry>
     <CheatEntry>
       <ID>31</ID>
-      <Description>"Infinite Items"</Description>
+      <Description>"Add Items"</Description>
       <LastState/>
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>{ Game   : re7.exe
   Version: 
-  Date   : 2021-05-16
+  Date   : 2021-05-21
   Author : Paradox
-
-  Gives items instead of subtracting items upon use
+  Description: Adds items instead of subtracting items upon use.
 }
 
 [ENABLE]
+define(addItem,re7.exe+41BA07)
+assert(addItem,29 C6)
+registersymbol(addItem)
 
-aobscanmodule(infItems,re7.exe,29 C6 89 B7 88 00 00 00) // should be unique
-alloc(newmem,$1000,infItems)
-
-label(code)
-label(return)
-
-newmem:
-
-code:
-  add esi,eax
-  mov [rdi+00000088],esi
-  jmp return
-
-infItems:
-  jmp newmem
-  nop 3
-return:
-registersymbol(infItems)
+addItem:
+  db 01 C6 // add esi,eax
 
 [DISABLE]
+addItem:
+  db 29 C6 // sub esi,eax
 
-infItems:
-  db 29 C6 89 B7 88 00 00 00
+unregistersymbol(addItem)
 
-unregistersymbol(infItems)
-dealloc(newmem)
-
+//Release
 {
 // ORIGINAL CODE - INJECTION POINT: re7.exe+41BA07
 

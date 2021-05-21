@@ -1,5 +1,5 @@
 # Resident_Evil_7_Trainer
-Trainer for Resident Evil 7
+Trainer for Resident Evil 7 and DLC
 <br>
 <br>
 Includes:
@@ -9,6 +9,12 @@ Cheat Engine Table (CT file)
 Source code for c++ trainer
 <br>
 Exe for c++ trainer in x64/Debug folder
+<br>
+<br>
+Notes:
+<br>
+Infinite health does not work in every situation.  If you get captured or instakilled, 
+the game will still end and prompt you to restart like normal.
 <br>
 <br>
 Screenshots:
