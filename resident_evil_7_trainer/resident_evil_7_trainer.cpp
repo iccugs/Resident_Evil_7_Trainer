@@ -8,7 +8,7 @@
 #include "mem.h"
 #include "ascii.h"
 
-bool bHealth = false, bO2= false, bAmmo = false, bGrenades = false, bItems = false;
+bool bHealth = false, bO2 = false, bAmmo = false, bGrenades = false, bItems = false, bMoney = false;
 
 void Menu()
 {
@@ -19,7 +19,8 @@ void Menu()
 	std::cout << "NUM1 = Infinite Oxygen = " << bO2 << "\n";
 	std::cout << "NUM2 = Increase Ammo = " << bAmmo << "\n";
 	std::cout << "NUM3 = Increase Grenades = " << bGrenades << "\n";
-	std::cout << "NUM4 = Add Items = " << bItems << "\n\n";
+	std::cout << "NUM4 = Add Items = " << bItems << "\n";
+	std::cout << "NUM5 = Infinite Money = " << bMoney << "\n\n";
 	std::cout << "INSERT = EXIT TRAINER\n";
 
 }
@@ -31,9 +32,10 @@ int main()
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(hConsole, 13);
 
-	uintptr_t moduleBase = 0, playerPtr = 0, playerPtr2 = 0, healthAddr = 0, o2Addr = 0;
+	uintptr_t moduleBase = 0, playerPtr = 0, playerPtr2 = 0, playerPtr3 = 0, healthAddr = 0, o2Addr = 0, moneyAddr = 0;
 
 	const float maxHealth = 9999, maxO2 = 100;
+	const int maxMoney = 999999;
 
 	DWORD procId = GetProcId(L"re7.exe");
 
@@ -61,8 +63,10 @@ int main()
 
 		playerPtr = moduleBase + 0x081EA150;
 		playerPtr2 = moduleBase + 0x081F01C0;
+		playerPtr3 = moduleBase + 0x081F11C8;
 		healthAddr = FindDMAAddy(hProcess, playerPtr, { 0x28,0x28,0x70,0x24 });
 		o2Addr = FindDMAAddy(hProcess, playerPtr2, { 0xD8,0x20 });
+		moneyAddr = FindDMAAddy(hProcess, playerPtr3, { 0x6C });
 
 		if (GetAsyncKeyState(VK_NUMPAD0) & 1)
 		{
@@ -141,6 +145,19 @@ int main()
 				Menu();
 			}
 		}
+
+		if (GetAsyncKeyState(VK_NUMPAD5) & 1)
+		{
+			bMoney = !bMoney;
+
+			ClearScreen();
+			Menu();
+		}
+		if (bMoney)
+		{
+			mem::PatchEx((BYTE*)moneyAddr, (BYTE*)&maxMoney, sizeof(maxMoney), hProcess);
+		}
+
 
 		if (GetAsyncKeyState(VK_INSERT) & 1)
 		{
